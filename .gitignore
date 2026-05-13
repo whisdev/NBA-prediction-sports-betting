@@ -105,3 +105,8 @@ venv.bak/
 
 .idea
 .DS_Store
+
+# Node / TypeScript
+node_modules/
+dist-lib/
+coverage/
