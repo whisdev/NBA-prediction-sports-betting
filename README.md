@@ -26,6 +26,19 @@ Install dependencies:
 pip3 install -r requirements.txt
 ```
 
+## TypeScript (utilities, tests, Flask static)
+Node **20+** is recommended. The data pipeline, model training, and `main.py` predictions remain **Python**. TypeScript covers shared betting math and the Flask landing-page script.
+
+```bash
+npm install
+npm test
+npm run build          # emits dist-lib/ + Flask/static/app.js
+```
+
+- **`ts/utils/`** — Kelly criterion and expected value (aligned with `src/Utils/Kelly_Criterion.py` and `Expected_Value.py`).
+- **`tests/ts/`** — Vitest specs mirroring `Tests/test_kelly_criterion.py` and `Tests/test_expected_value.py`.
+- **`ts/flask-static/app.ts`** — source for `Flask/static/app.js` (rebuild after edits with `npm run build:flask`).
+
 ## Quick start
 ```bash
 python3 main.py -xgb -odds=fanduel
