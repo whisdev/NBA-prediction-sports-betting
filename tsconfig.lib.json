@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist-lib",
+    "rootDir": "ts",
+    "declaration": true,
+    "verbatimModuleSyntax": false
+  },
+  "include": ["ts/index.ts", "ts/utils/**/*.ts"],
+  "exclude": ["ts/flask-static/**"]
+}
