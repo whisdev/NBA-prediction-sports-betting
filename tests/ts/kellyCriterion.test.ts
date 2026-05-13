@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   americanToDecimal,
   calculateKellyCriterion,
-} from "../../ts/utils/kellyCriterion.js";
+} from "../../src/utils/kellyCriterion.js";
 
 describe("americanToDecimal", () => {
   it("matches Python convention for negative odds", () => {
