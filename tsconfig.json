@@ -12,6 +12,6 @@
     "esModuleInterop": true,
     "resolveJsonModule": true
   },
-  "include": ["ts/**/*.ts", "tests/ts/**/*.ts"],
-  "exclude": ["ts/flask-static/**", "node_modules", "dist-lib"]
+  "include": ["src/**/*.ts", "tests/ts/**/*.ts"],
+  "exclude": ["node_modules", "dist-lib"]
 }
