@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { expectedValue } from "../../ts/utils/expectedValue.js";
+import { expectedValue } from "../../src/utils/expectedValue.js";
 
 describe("expectedValue", () => {
   it("case 1", () => {
