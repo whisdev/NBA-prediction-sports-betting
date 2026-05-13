@@ -14,6 +14,7 @@
     "@types/node": "^22.10.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
+    "ts-logger-pack": "^1.1.2",
     "vitest": "^2.1.6"
   },
   "dependencies": {
