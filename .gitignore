@@ -17,3 +17,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+
+# Legacy training artifacts (not used by TypeScript predictor)
+Data/*.sqlite
+Models/XGBoost_Models/XGBoost_53.7%_UO-9.json
