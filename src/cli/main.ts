@@ -18,20 +18,14 @@ import { calculateKellyCriterion } from "../utils/kellyCriterion.js";
 import { expectedValue } from "../utils/expectedValue.js";
 
 type CliArgs = {
-  xgb: boolean;
-  nn: boolean;
-  all: boolean;
   odds?: string;
   kc: boolean;
 };
 
 function parseArgs(argv: string[]): CliArgs {
-  const out: CliArgs = { xgb: false, nn: false, all: false, kc: false };
+  const out: CliArgs = { kc: false };
   for (const a of argv) {
-    if (a === "-xgb" || a === "--xgb") out.xgb = true;
-    else if (a === "-nn" || a === "--nn") out.nn = true;
-    else if (a === "-A" || a === "--all") out.all = true;
-    else if (a === "-kc" || a === "--kc") out.kc = true;
+    if (a === "-kc" || a === "--kc") out.kc = true;
     else if (a.startsWith("-odds=")) out.odds = a.slice("-odds=".length);
     else if (a.startsWith("--odds=")) out.odds = a.slice("--odds=".length);
   }
@@ -102,7 +96,7 @@ async function resolveGames(
   return { games, odds: null };
 }
 
-async function runXgb(
+async function runPredictions(
   games: [string, string][],
   mlBatch: Float32Array[],
   uoBatch: Float32Array[],
@@ -172,38 +166,18 @@ async function runXgb(
 
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
-  if (args.all) {
-    args.xgb = true;
-    args.nn = true;
-  }
-  if (!args.xgb && !args.nn) {
-    console.log(chalk.yellow("Pass -xgb (or -A). Example:"));
-    console.log(chalk.cyan("  npx tsx src/cli/main.ts -xgb -odds=fanduel"));
-    process.exit(1);
-  }
-  if (args.nn && !args.xgb) {
-    console.log(
-      chalk.red(
-        "-nn is not available in this repo (neural nets were removed with the Python stack). Use -xgb.",
-      ),
-    );
-    process.exit(1);
-  }
-  if (args.nn) {
-    console.log(chalk.yellow("Ignoring -nn: only ONNX XGBoost is supported."));
-  }
   if (!args.odds) {
-    console.log(chalk.red("This CLI requires -odds=<book> (see README)."));
+    console.log(chalk.yellow("Usage:"));
+    console.log(chalk.cyan("  npm run predict -- -odds=fanduel"));
+    console.log(chalk.cyan("  npm run predict -- -odds=draftkings -kc"));
     process.exit(1);
   }
 
-  let oddsDict: OddsDict | null = null;
-  oddsDict = await getOddsFromSbr(args.odds);
-
+  const oddsDict = await getOddsFromSbr(args.odds);
   const resolved = await resolveGames(oddsDict, args.odds);
   if (!resolved) return;
   let { games } = resolved;
-  let activeOdds = resolved.odds;
+  const activeOdds = resolved.odds;
 
   if (!activeOdds) {
     console.log(chalk.red("Odds unavailable for today's slate key; stopping."));
@@ -228,10 +202,7 @@ async function main(): Promise<void> {
   }
 
   const uoMatrix = buildUoMatrix(mlMatrix, uoLines);
-
-  if (args.xgb) {
-    await runXgb(usedGames, mlMatrix, uoMatrix, uoLines, homeOdds, awayOdds, args.kc);
-  }
+  await runPredictions(usedGames, mlMatrix, uoMatrix, uoLines, homeOdds, awayOdds, args.kc);
 }
 
 main().catch((e) => {
