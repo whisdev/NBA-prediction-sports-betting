@@ -3,10 +3,6 @@
 **Find edges before tip-off.** This tool pulls tonight's NBA slate, layers in team form and rest, runs proven XGBoost models, and compares your model's win probability to **live sportsbook lines** — so you can spot **+EV moneyline and total** plays fast.
 
 <p align="center">
-  <img src="docs/assets/betting-pipeline.svg" alt="From odds and stats to +EV picks" width="900"/>
-</p>
-
-<p align="center">
   <strong>Moneyline model · ~69% validation accuracy</strong> &nbsp;|&nbsp;
   <strong>Totals model · OVER/UNDER signals</strong> &nbsp;|&nbsp;
   <strong>EV + optional Kelly sizing</strong>
@@ -25,22 +21,6 @@
 | **Kelly (`-kc`)** | Suggested % of bankroll when you want sizing math (use responsibly) |
 
 > **Not a picks service.** This is a research CLI. Lines move, injuries happen, and models miss — always verify before you bet.
-
----
-
-## See it in action
-
-**Tonight's board** — color-coded sides, confidence, and totals:
-
-<p align="center">
-  <img src="Screenshots/output.png" alt="XGBoost predictions for tonight's NBA games with confidence percentages" width="920"/>
-</p>
-
-**Expected value vs the book** — where the model disagrees with the price:
-
-<p align="center">
-  <img src="Screenshots/Expected_value.png" alt="Expected value and Kelly criterion output per team" width="920"/>
-</p>
 
 ---
 
