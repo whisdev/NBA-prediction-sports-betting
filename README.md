@@ -48,6 +48,29 @@ npm test
 
 ---
 
+## Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run predict` | Tonight's slate with odds, EV, optional Kelly |
+| `npm run typecheck` | Strict TypeScript check |
+| `npm test` | Vitest betting-math and pipeline specs |
+
+---
+
+## Redis cache (optional)
+
+Copy `.env.example` to `.env` to cache odds pulls and feature builds across runs:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `REDIS_URL` | — | Full Redis URL |
+| `REDIS_ENABLED` | `true` | Set `false` for memory-only |
+| `REDIS_KEY_PREFIX` | `nba-bet:` | Cache namespace |
+| `REDIS_CACHE_TTL_SEC` | `1800` | TTL in seconds |
+
+---
+
 ## How tonight's slate becomes a bet
 
 ```mermaid
