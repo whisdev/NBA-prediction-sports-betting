@@ -1,6 +1,8 @@
 import type { OddsDict } from "./sbrTypes.js";
 import { fetchSbrNbaGames, pickSportsbookKey } from "./sbrScraper.js";
 import type { SbrGame } from "./sbrTypes.js";
+import { oddsCacheKey } from "../utils/cacheKeys.js";
+import { cacheGet, cacheSet } from "../utils/redisCache.js";
 
 function buildDict(games: SbrGame[], sportsbook: string): OddsDict {
   const dict: OddsDict = {};
@@ -18,7 +20,14 @@ function buildDict(games: SbrGame[], sportsbook: string): OddsDict {
   return dict;
 }
 
-export async function getOddsFromSbr(sportsbook: string): Promise<OddsDict> {
+export async function getOddsFromSbr(sportsbook: string, useCache = true): Promise<OddsDict> {
+  const cacheKey = oddsCacheKey(sportsbook);
+  if (useCache) {
+    const cached = await cacheGet<OddsDict>(cacheKey);
+    if (cached) return cached;
+  }
   const games = await fetchSbrNbaGames();
-  return buildDict(games, sportsbook);
+  const dict = buildDict(games, sportsbook);
+  if (useCache) await cacheSet(cacheKey, dict);
+  return dict;
 }

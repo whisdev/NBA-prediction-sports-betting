@@ -17,6 +17,7 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+package-lock.json
 
 # Legacy training artifacts (not used by TypeScript predictor)
 Data/*.sqlite

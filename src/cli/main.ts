@@ -16,6 +16,8 @@ import { getOddsFromSbr } from "../odds/sbrOdds.js";
 import { XgbOnnxPredictor } from "../predict/xgboostOnnx.js";
 import { calculateKellyCriterion } from "../utils/kellyCriterion.js";
 import { expectedValue } from "../utils/expectedValue.js";
+import { cacheFlushNamespace } from "../utils/redisCache.js";
+import { closeRedisClient, isRedisEnabled, pingRedis } from "../utils/redis.js";
 
 type CliArgs = {
   odds?: string;
@@ -165,7 +167,22 @@ async function runPredictions(
 }
 
 async function main(): Promise<void> {
-  const args = parseArgs(process.argv.slice(2));
+  const argv = process.argv.slice(2);
+  if (argv[0] === "redis" && argv[1] === "ping") {
+    if (!isRedisEnabled()) {
+      console.log(chalk.yellow("Redis disabled. Set REDIS_URL or REDIS_HOST."));
+      return;
+    }
+    console.log((await pingRedis()) ? chalk.green("Redis PONG") : chalk.red("Redis unreachable"));
+    return;
+  }
+  if (argv[0] === "redis" && argv[1] === "flush") {
+    const n = await cacheFlushNamespace();
+    console.log(chalk.green(`Flushed ${n} Redis key(s)`));
+    return;
+  }
+
+  const args = parseArgs(argv);
   if (!args.odds) {
     console.log(chalk.yellow("Usage:"));
     console.log(chalk.cyan("  npm run predict -- -odds=fanduel"));
@@ -205,7 +222,11 @@ async function main(): Promise<void> {
   await runPredictions(usedGames, mlMatrix, uoMatrix, uoLines, homeOdds, awayOdds, args.kc);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await closeRedisClient();
+  });
