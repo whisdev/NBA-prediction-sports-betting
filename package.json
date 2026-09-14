@@ -19,7 +19,7 @@
   "dependencies": {
     "chalk": "^5.4.1",
     "csv-parse": "^5.6.0",
-    "oscar-redis": "^5.10.2",
+    "oracle-redis": "^5.11.2",
     "onnxruntime-node": "^1.26.0",
     "undici": "^7.3.0"
   }
